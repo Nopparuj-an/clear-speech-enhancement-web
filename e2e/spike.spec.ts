@@ -17,3 +17,18 @@ test('spike checks with the real model', async ({ page }, testInfo) => {
   await writeFile('spike-results.json', json);
   expect(JSON.parse(json).fatal).toBeUndefined();
 });
+
+test('real model: full app flow, MP3 in → enhanced MP3 out', async ({ page }, testInfo) => {
+  test.skip(process.env.SPIKE !== '1' || testInfo.project.name !== 'desktop', 'SPIKE=1 only');
+  test.setTimeout(10 * 60_000);
+  await page.goto('./');
+  await page.setInputFiles('#file', fileURLToPath(new URL('./fixtures/noisy-speech.mp3', import.meta.url)));
+  await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible({ timeout: 8 * 60_000 });
+  await expect(page.getByRole('radio', { name: /MP3/ })).toHaveAttribute('aria-checked', 'true');
+  const pending = page.waitForEvent('download');
+  await page.getByRole('button', { name: /^Export / }).click();
+  const file = await pending;
+  expect(file.suggestedFilename()).toBe('noisy-speech-enhanced.mp3');
+  await expect(page.getByText('output LUFS')).toBeVisible();
+  console.log('REAL FLOW stats:', await page.locator('.stats-grid').innerText());
+});
