@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Spike checks · Speech Enhancement</title>
+    <style>
+      body { margin: 0; padding: 24px; font: 15px/1.5 system-ui, sans-serif; color: #16171a; background: #f3f2ee; }
+      main { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+      button, input { font: inherit; min-height: 44px; }
+      button { padding: 0 16px; border-radius: 10px; border: 0; background: #16171a; color: #fff; cursor: pointer; }
+      button:disabled { opacity: .5; cursor: default; }
+      pre { background: #fff; border: 1px solid #e2e0da; border-radius: 10px; padding: 12px; overflow: auto; white-space: pre-wrap; font-size: 13px; }
+      #log { max-height: 320px; }
+      .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+      a { color: #1f4fd1; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 style="margin: 0">Spike checks</h1>
+      <p style="margin: 0">Runs ARCHITECTURE §11 spikes S1, S2, S4, S5, S6 and S7 against the real Clear model in this browser. Pick a speech recording of 2–5 minutes (noisy is best). Everything stays on this device.</p>
+      <div class="row">
+        <input id="file" type="file" accept="audio/*,video/*" />
+        <button id="run" type="button" disabled>Run all checks</button>
+        <button id="copy" type="button" disabled>Copy results</button>
+      </div>
+      <div class="row" id="downloads"></div>
+      <pre id="log" aria-live="polite"></pre>
+      <pre id="result"></pre>
+    </main>
+    <script type="module" src="/src/spike/spike.ts"></script>
+  </body>
+</html>
