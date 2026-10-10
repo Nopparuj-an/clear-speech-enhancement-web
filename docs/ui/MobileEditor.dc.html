@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Editor, mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F4FD1}a:hover{color:#163A9E}
+.seg{flex:1 1 0;min-width:0;min-height:44px;padding:6px 4px;border:1px solid #D9D7D0;background:#FFFFFF;color:#16171A;border-radius:10px;font:500 13px/1.2 'IBM Plex Sans',sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.seg small{font:400 11px/1.2 'IBM Plex Mono',monospace;color:#5B5E66}
+.seg.on{background:#16171A;border-color:#16171A;color:#FFFFFF}
+.seg.on small{color:#C9CBD1}
+.tab{flex:1;min-height:40px;border:0;background:transparent;border-radius:8px;font:500 14px 'IBM Plex Sans',sans-serif;color:#5B5E66;cursor:pointer}
+.tab.on{background:#FFFFFF;color:#16171A;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.range{width:100%;accent-color:#1F4FD1;height:40px;margin:0;cursor:pointer}
+.lane{position:relative;height:58px;border-radius:6px;background:#FAFAF8;overflow:hidden}
+.lane.dim{opacity:.45}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; position: relative; font-family: 'IBM Plex Sans', sans-serif; color: #16171A; background: #F3F2EE; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 16px; border-bottom: 1px solid #E2E0DA; background: #FFFFFF">
+    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+      <span style="font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">interview_take3.mp4</span>
+      <span style="font: 400 12px 'IBM Plex Mono', monospace; color: #5B5E66">12:48 · 48 kHz stereo</span>
+    </div>
+    <button type="button" onClick="{{askClose}}" style="min-height: 44px; padding: 0 12px; border: 1px solid #D9D7D0; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; gap: 6px; cursor: pointer; color: #16171A; font: 500 14px 'IBM Plex Sans', sans-serif">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      Start over
+    </button>
+  </header>
+
+  <main style="flex: 1; min-height: 0; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 12px">
+    <div style="height: 140px; flex: none; background: #1D1F24; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #9EA2AB; font-size: 13px">Video preview</div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E2E0DA; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 6px">
+      <div style="position: relative; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 12px; font-weight: 500">Original</span>
+        <div class="lane {{origDim}}">
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; gap: 1px; padding: 0 2px">
+            <sc-for list="{{bars}}" as="b" hint-placeholder-count="80">
+              <div style="flex: 1 1 0; border-radius: 1px; background: #9C9A93; height: {{b.dry}}"></div>
+            </sc-for>
+          </div>
+        </div>
+        <span style="font-size: 12px; font-weight: 500; margin-top: 2px">Enhanced <span style="font-family: 'IBM Plex Mono', monospace; color: #5B5E66">· {{strength}}%</span></span>
+        <div class="lane {{wetDim}}">
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; gap: 1px; padding: 0 2px">
+            <sc-for list="{{bars}}" as="b" hint-placeholder-count="80">
+              <div style="flex: 1 1 0; border-radius: 1px; background: #1F4FD1; height: {{b.mix}}"></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="position: absolute; top: 20px; bottom: 0; left: 0; width: 4%; background: rgba(243,242,238,.82); pointer-events: none"></div>
+        <div style="position: absolute; top: 20px; bottom: 0; right: 0; width: 8%; background: rgba(243,242,238,.82); pointer-events: none"></div>
+        <button type="button" aria-label="Trim start handle" style="position: absolute; top: 20px; bottom: 0; left: 4%; width: 24px; margin-left: -12px; border: 0; padding: 0; background: transparent; display: flex; justify-content: center"><span style="width: 4px; height: 100%; background: #16171A; border-radius: 2px"></span></button>
+        <button type="button" aria-label="Trim end handle" style="position: absolute; top: 20px; bottom: 0; left: 92%; width: 24px; margin-left: -12px; border: 0; padding: 0; background: transparent; display: flex; justify-content: center"><span style="width: 4px; height: 100%; background: #16171A; border-radius: 2px"></span></button>
+        <div style="position: absolute; top: 20px; bottom: 0; left: 31%; width: 2px; background: #D4462F; pointer-events: none"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font: 400 12px 'IBM Plex Mono', monospace; color: #5B5E66">
+        <span>Trim 0:31.20</span><span>11:46.50</span>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px">
+      <button type="button" aria-label="{{playLabel}}" onClick="{{togglePlay}}" style="width: 56px; height: 56px; flex: none; border-radius: 50%; border: 0; background: #16171A; color: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center">
+        <sc-if value="{{playing}}" hint-placeholder-val="{{ false }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
+        </sc-if>
+        <sc-if value="{{paused}}" hint-placeholder-val="{{ true }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+        </sc-if>
+      </button>
+      <span style="font: 500 14px 'IBM Plex Mono', monospace">3:58 <span style="color: #5B5E66">/ 12:48</span></span>
+      <div style="display: flex; gap: 4px; background: #E8E6E0; border-radius: 10px; padding: 4px; margin-left: auto" role="group" aria-label="Listen to">
+        <sc-for list="{{listenOpts}}" as="o" hint-placeholder-count="2">
+          <button type="button" class="tab {{o.cls}}" style="padding: 0 10px; font-size: 13px" onClick="{{o.pick}}">{{o.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E2E0DA; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 4px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <label for="mstrength" style="font-weight: 600; font-size: 15px">Enhancement strength</label>
+        <span style="font: 500 15px 'IBM Plex Mono', monospace">{{strength}}%</span>
+      </div>
+      <input id="mstrength" class="range" type="range" min="0" max="100" step="1" value="{{strength}}" onInput="{{setStrength}}">
+      <div style="display: flex; justify-content: space-between; font-size: 12px; color: #5B5E66"><span>Original</span><span>Fully enhanced</span></div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E2E0DA; border-radius: 12px; display: flex; flex-direction: column">
+      <button type="button" onClick="{{toggleOpts}}" aria-expanded="{{optsOpenStr}}" style="min-height: 56px; padding: 0 14px; border: 0; background: transparent; display: flex; align-items: center; gap: 10px; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; color: #16171A; text-align: left">
+        <span style="font-weight: 600; font-size: 15px">Options</span>
+        <span style="flex: 1; font-size: 13px; color: #5B5E66; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{summary}}</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="{{chevron}}"></path></svg>
+      </button>
+      <sc-if value="{{optsOpen}}" hint-placeholder-val="{{ false }}">
+        <div style="padding: 0 14px 14px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 13px; font-weight: 500">Loudness</span>
+            <div style="display: flex; gap: 6px" role="group" aria-label="Loudness target">
+              <sc-for list="{{loudOpts}}" as="o" hint-placeholder-count="4">
+                <button type="button" class="seg {{o.cls}}" onClick="{{o.pick}}">{{o.label}}<small>{{o.sub}}</small></button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px">
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+              <span style="font-size: 13px; font-weight: 500">Channels</span>
+              <div style="display: flex; gap: 6px" role="group" aria-label="Channels">
+                <sc-for list="{{chOpts}}" as="o" hint-placeholder-count="2">
+                  <button type="button" class="seg {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+              <span style="font-size: 13px; font-weight: 500">Sample rate</span>
+              <div style="display: flex; gap: 6px" role="group" aria-label="Sample rate">
+                <sc-for list="{{srOpts}}" as="o" hint-placeholder-count="2">
+                  <button type="button" class="seg {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </main>
+
+  <div style="padding: 12px 16px 20px; background: #FFFFFF; border-top: 1px solid #E2E0DA">
+    <a href="MobileExport.dc.html" style="min-height: 54px; border-radius: 12px; background: #1F4FD1; color: #FFFFFF; font: 600 17px 'IBM Plex Sans', sans-serif; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"></path></svg>
+      Export
+    </a>
+  </div>
+
+  <sc-if value="{{confirmOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(22,23,26,.45); display: flex; align-items: flex-end">
+      <div role="dialog" aria-modal="true" aria-labelledby="mCloseTitle" style="width: 100%; box-sizing: border-box; background: #FFFFFF; border-radius: 20px 20px 0 0; padding: 20px 16px 24px; display: flex; flex-direction: column; gap: 10px">
+        <h2 id="mCloseTitle" style="margin: 0; font-size: 19px; font-weight: 600">Close this file and start over?</h2>
+        <p style="margin: 0 0 6px; font-size: 14px; line-height: 1.5; color: #4A4D55">The enhanced audio and your trim are discarded. Anything you already exported is kept.</p>
+        <button type="button" onClick="{{cancelClose}}" style="min-height: 52px; border: 0; border-radius: 12px; background: #16171A; color: #FFFFFF; font: 600 16px 'IBM Plex Sans', sans-serif; cursor: pointer">Close and choose a file</button>
+        <button type="button" onClick="{{cancelClose}}" style="min-height: 52px; border: 1px solid #D9D7D0; border-radius: 12px; background: #FFFFFF; color: #16171A; font: 500 16px 'IBM Plex Sans', sans-serif; cursor: pointer">Keep working</button>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { strength: 80, playing: false, listen: 'mix', loud: 'podcast', ch: 'mono', sr: '48', optsOpen: false, confirmOpen: false };
+  }
+  opts(key, list) {
+    return list.map((o) => ({ ...o, cls: this.state[key] === o.id ? 'on' : '', pick: () => this.setState({ [key]: o.id }) }));
+  }
+  renderVals() {
+    const s = this.state;
+    const r = (i) => { const x = Math.sin(i * 12.9898) * 43758.5453; return x - Math.floor(x); };
+    const k = s.strength / 100;
+    const bars = [];
+    for (let i = 0; i < 80; i++) {
+      const j = i * 2;
+      const speak = Math.sin(j * 0.21) + Math.sin(j * 0.057 + 1) > -0.5;
+      const dry = speak ? 0.38 + 0.58 * r(j) : 0.16 + 0.1 * r(j + 7);
+      const wet = speak ? (0.32 + 0.6 * r(j)) * 0.95 : 0.03 + 0.03 * r(j + 7);
+      bars.push({ dry: Math.round(dry * 54) + 'px', mix: Math.max(2, Math.round((k * wet + (1 - k) * dry) * 54)) + 'px' });
+    }
+    const loud = { off: 'Loudness off', podcast: 'Podcast −19', stream: 'Streaming −14', broadcast: 'Broadcast −23' };
+    const orig = s.listen === 'original';
+    return {
+      bars,
+      strength: s.strength,
+      setStrength: (e) => this.setState({ strength: Number(e.target.value) }),
+      playing: s.playing,
+      paused: !s.playing,
+      playLabel: s.playing ? 'Pause' : 'Play',
+      togglePlay: () => this.setState({ playing: !s.playing }),
+      origDim: orig ? '' : 'dim',
+      wetDim: orig ? 'dim' : '',
+      listenOpts: this.opts('listen', [{ id: 'original', label: 'Original' }, { id: 'mix', label: 'Enhanced' }]),
+      optsOpen: s.optsOpen,
+      optsOpenStr: String(s.optsOpen),
+      toggleOpts: () => this.setState({ optsOpen: !s.optsOpen }),
+      chevron: s.optsOpen ? 'M6 15l6-6 6 6' : 'M6 9l6 6 6-6',
+      summary: loud[s.loud] + ' · ' + (s.ch === 'mono' ? 'Mono' : 'Stereo') + ' · ' + (s.sr === '48' ? '48 kHz' : 'Source rate'),
+      loudOpts: this.opts('loud', [{ id: 'off', label: 'Off', sub: 'as is' }, { id: 'podcast', label: 'Podcast', sub: '−19' }, { id: 'stream', label: 'Stream', sub: '−14' }, { id: 'broadcast', label: 'Broadc.', sub: '−23' }]),
+      chOpts: this.opts('ch', [{ id: 'mono', label: 'Mono' }, { id: 'stereo', label: 'Stereo' }]),
+      srOpts: this.opts('sr', [{ id: '48', label: '48 kHz' }, { id: 'src', label: 'Source' }]),
+      confirmOpen: s.confirmOpen,
+      askClose: () => this.setState({ confirmOpen: true }),
+      cancelClose: () => this.setState({ confirmOpen: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Processing, desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3F2EE}
+a{color:#1F4FD1}a:hover{color:#163A9E}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; font-family: 'IBM Plex Sans', sans-serif; color: #16171A; background: #F3F2EE; display: flex; flex-direction: column">
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px 24px; border-bottom: 1px solid #E2E0DA; background: #FFFFFF">
+  <div style="display: flex; align-items: center; gap: 10px">
+    <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#16171A"></rect><path d="M7 14h2M11 10v8M15 7v14M19 11v6M23 14h-2" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path></svg>
+    <span style="font-weight: 600; font-size: 17px">Speech Enhancement</span>
+  </div>
+  <span style="font-size: 14px; font-weight: 500">board_meeting_full.mov</span>
+  <span style="font: 400 13px 'IBM Plex Mono', monospace; color: #5B5E66">1:34:12 · 48 kHz stereo</span>
+</header>
+
+<main style="flex: 1; width: 100%; max-width: 720px; margin: 0 auto; box-sizing: border-box; padding: 48px 24px; display: flex; flex-direction: column; gap: 20px">
+  <div role="alert" style="display: flex; gap: 12px; background: #FFF5E6; border: 1px solid #F0D3A8; border-radius: 14px; padding: 16px; color: #5A3A0C">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex: none" aria-hidden="true"><path d="M12 3l10 18H2z"></path><path d="M12 10v5M12 18h.01"></path></svg>
+    <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px; line-height: 1.5">
+      <span><strong>This file is 1 h 34 min long.</strong> Long files need a lot of memory (roughly 2 GB here) and the tab may crash, especially on phones. Trimming to the part you need first is faster.</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 0; background: #5A3A0C; color: #FFFFFF; font: 600 14px 'IBM Plex Sans', sans-serif; cursor: pointer">Continue anyway</button>
+        <button type="button" style="min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #D9B98A; background: #FFFFFF; color: #5A3A0C; font: 500 14px 'IBM Plex Sans', sans-serif; cursor: pointer">Trim before cleaning</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: #FFFFFF; border: 1px solid #E2E0DA; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 22px">
+    <h1 style="margin: 0; font-size: 24px; font-weight: 600">Cleaning your audio</h1>
+
+    <div style="display: flex; gap: 14px; align-items: flex-start">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F4FD1" stroke-width="2" style="flex: none" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 12l3 3 5-6"></path></svg>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-weight: 500">Download the cleanup model</span>
+        <span style="font-size: 13px; color: #5B5E66">Done. Cached, so next time it starts instantly.</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 14px; align-items: flex-start">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1F4FD1" stroke-width="2" style="flex: none" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8 12l3 3 5-6"></path></svg>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-weight: 500">Read the audio track</span>
+        <span style="font-size: 13px; color: #5B5E66">Done.</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 14px; align-items: flex-start">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16171A" stroke-width="2" style="flex: none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke-dasharray="4 3"></circle></svg>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline">
+          <span style="font-weight: 500">Remove noise and echo</span>
+          <span style="font: 500 14px 'IBM Plex Mono', monospace">62%</span>
+        </div>
+        <div style="height: 8px; border-radius: 4px; background: #EEEDE8; overflow: hidden" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Cleaning progress">
+          <div style="width: 62%; height: 100%; background: #1F4FD1; border-radius: 4px"></div>
+        </div>
+        <span style="font-size: 13px; color: #5B5E66">About 40 s left · running 31× faster than real time</span>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 14px; align-items: flex-start; color: #5B5E66">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9EA2AB" stroke-width="2" style="flex: none" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle></svg>
+      <span style="font-weight: 500">Build waveform</span>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end">
+      <button type="button" style="min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1px solid #D9D7D0; background: #FFFFFF; color: #16171A; font: 500 14px 'IBM Plex Sans', sans-serif; cursor: pointer">Cancel</button>
+    </div>
+  </div>
+  <p style="margin: 0; font-size: 13px; color: #5B5E66">Keep this tab open. Processing happens on your device, so speed depends on your computer.</p>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
