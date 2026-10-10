@@ -31,3 +31,25 @@ jobs:
         with:
           name: playwright-report
           path: test-results/
+
+  # Real-model measurements for ARCHITECTURE §11. Informational: never blocks.
+  spikes:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test e2e/spike.spec.ts --project=desktop
+        env:
+          SPIKE: '1'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spike-results
+          path: spike-results.json

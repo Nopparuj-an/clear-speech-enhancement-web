@@ -153,3 +153,4 @@ dist/
 public/litert/
 test-results/
 playwright-report/
+spike-results.json

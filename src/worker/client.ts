@@ -9,6 +9,9 @@ export class WorkerError extends Error {
   }
 }
 
+/** `?mock-model` swaps the model for a cheap fake, for tests without network. */
+const MOCK_MODEL = typeof location !== 'undefined' && new URLSearchParams(location.search).has('mock-model');
+
 type Pending = { resolve: (value: WorkerResponse) => void; reject: (error: Error) => void };
 
 /** Promise wrapper over the enhancement worker. `cancel()` kills and respawns it. */
@@ -64,7 +67,7 @@ export class EnhanceClient {
   load(): Promise<{ cached: boolean }> {
     return new Promise((resolve, reject) => {
       this.loadWaiters.push({ resolve: (m) => resolve(m as { type: 'loaded'; cached: boolean }), reject });
-      this.worker.postMessage({ type: 'load' } satisfies WorkerRequest);
+      this.worker.postMessage({ type: 'load', mock: MOCK_MODEL } satisfies WorkerRequest);
     });
   }
 

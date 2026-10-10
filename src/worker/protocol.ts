@@ -4,7 +4,7 @@
 export type ChannelMode = 'mono' | 'preserve';
 
 export type WorkerRequest =
-  | { type: 'load' }
+  | { type: 'load'; mock?: boolean }
   | { type: 'enhance'; id: number; channels: Float32Array[]; sampleRate: number; channelMode: ChannelMode }
   | { type: 'master'; id: number; channels: Float32Array[]; sampleRate: number; targetLUFS: number; peakCeilingDBFS: number }
   | { type: 'peaks'; id: number; channels: Float32Array[]; buckets: number };

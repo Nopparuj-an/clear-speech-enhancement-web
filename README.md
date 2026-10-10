@@ -8,7 +8,7 @@ export as audio or as video. The video is copied without re-encoding.
 Enhancement uses the [Clear model by Desert Ant Labs](https://desertant.com/models/clear/),
 who are not affiliated with this project.
 
-> Status: design phase. See [docs/SPEC.md](docs/SPEC.md) and
+> Status: v1 in progress. See [docs/SPEC.md](docs/SPEC.md) and
 > [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Development
@@ -19,6 +19,9 @@ npm run dev        # http://localhost:5173/clear-speech-enhancement-web/
 npm test           # unit tests
 npm run test:e2e   # Playwright (builds must exist: npm run build)
 ```
+
+Add `?mock-model` to the URL to swap the model for a fast fake (no download);
+the end-to-end tests use it.
 
 `/spike.html` runs the pre-build checks from ARCHITECTURE §11 against the real
 model in your browser.

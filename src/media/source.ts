@@ -8,6 +8,8 @@ export interface MediaInfo {
   /** Set only when the file has a video track we can copy. */
   videoContainer: VideoContainer | null;
   duration: number;
+  /** Source time of the first audio sample; audio time 0 maps here. */
+  audioStart: number;
   audio: { codec: string | null; channels: number; sampleRate: number; bitrate: number | null };
   video: { codec: string | null; width: number; height: number } | null;
 }
@@ -47,6 +49,7 @@ export async function probe(file: File): Promise<MediaInfo> {
       containerName: format.name,
       videoContainer: container,
       duration: await input.computeDuration(),
+      audioStart: await audio.getFirstTimestamp(),
       audio: {
         codec: audio.codec,
         channels: audio.numberOfChannels,

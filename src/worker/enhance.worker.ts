@@ -9,7 +9,8 @@ const post = (message: WorkerResponse, transfer: Transferable[] = []) => self.po
 
 let clear: Promise<ClearInstance> | null = null;
 
-function load(): Promise<ClearInstance> {
+function load(mock = false): Promise<ClearInstance> {
+  if (mock) clear ??= import('./mockClear').then((m) => m.createMockClear() as unknown as ClearInstance);
   clear ??= (async () => {
     // Imported lazily so the importScripts shim is installed first and the 46 MB
     // core only downloads when the worker is actually asked for the model.
@@ -43,7 +44,7 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
   try {
     switch (req.type) {
       case 'load': {
-        const instance = await load();
+        const instance = await load(req.mock);
         post({ type: 'loaded', cached: instance.isDownloaded() });
         break;
       }

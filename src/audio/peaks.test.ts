@@ -23,3 +23,13 @@ describe('lerpPeaks', () => {
     expect(lerpPeaks(a, b, 0.25).max[0]).toBe(0.75);
   });
 });
+
+describe('mixPeaks', () => {
+  it('matches computePeaks of the materialised mix', async () => {
+    const { mixChannels } = await import('./mix');
+    const dry = [Float32Array.from([0.2, -0.4, 0.9, 0.1, -0.3, 0.5])];
+    const wet = [Float32Array.from([0.1, 0, 0.3, 0, -0.1, 0.2])];
+    const { mixPeaks } = await import('./peaks');
+    expect(mixPeaks(dry, wet, 0.3, 3)).toEqual(computePeaks(mixChannels(dry, wet, 0.3), 3));
+  });
+});
