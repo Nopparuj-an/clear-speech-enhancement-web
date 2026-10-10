@@ -46,7 +46,15 @@ export async function ensureEncoder(codec: EncodableCodec, target: EncodeTarget)
 /** Which audio formats this browser can export for a given layout. */
 export async function supportedAudioFormats(target: EncodeTarget): Promise<Set<AudioFormatId>> {
   const ids = Object.keys(AUDIO_FORMATS) as AudioFormatId[];
-  const ok = await Promise.all(ids.map((id) => ensureEncoder(AUDIO_FORMATS[id].codec, { ...target, bitrate: undefined })));
+  // MP3, AAC and FLAC always have a WASM fallback, loaded only when exporting;
+  // PCM is built in. Only Opus depends on the browser's own encoder.
+  const ok = await Promise.all(
+    ids.map((id) => {
+      const codec = AUDIO_FORMATS[id].codec;
+      if (codec !== 'opus') return true;
+      return canEncodeAudio('opus', { numberOfChannels: target.numberOfChannels, sampleRate: target.sampleRate }).catch(() => false);
+    }),
+  );
   return new Set(ids.filter((_, i) => ok[i]));
 }
 

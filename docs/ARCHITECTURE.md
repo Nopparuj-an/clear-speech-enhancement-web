@@ -95,6 +95,17 @@ The Clear SDK uses a top-level `await` and a 46 MB WASM core, so it lives in a
 ```
 
 - All sample buffers are **transferred**, never copied.
+- **Module worker + LiteRT.js:** LiteRT.js loads its Emscripten runtime with
+  `importScripts` inside workers, which module workers reject.
+  `worker/importScriptsShim.ts` replaces it with a synchronous fetch + global
+  `eval`. Because the script is then eval'd, the worker also presets
+  `self.Module.locateFile` so the runtime finds its `.wasm` under `litert/`.
+- **Test double:** `?mock-model` in the page URL makes the worker use
+  `worker/mockClear.ts` (a fast fake with the SDK's shape) instead of
+  downloading the model. The Playwright flow tests use it.
+- **Peaks** are computed on the main thread (`audio/peaks.ts`). It's fast
+  enough for long files, and avoids copying buffers to the worker. The
+  worker's `peaks` message stays available if profiling says otherwise.
 - **Cancel** terminates the worker and starts a new one. A single
   `enhance()` call can't be interrupted, and the model files stay in the
   browser cache, so restarting is cheap.
@@ -104,7 +115,8 @@ The Clear SDK uses a top-level `await` and a 46 MB WASM core, so it lives in a
     `enhance()` on ~60 s chunks with overlap and crossfade (gives real
     progress and lower peak memory), or show an indeterminate bar with an
     estimate from file duration.
-  - Spike **S4** decides which.
+  - Spike **S4** decides which. v1 ships the indeterminate bar with an
+    elapsed-time counter.
 
 ## 5. Playback and preview
 
@@ -137,8 +149,11 @@ The Clear SDK uses a top-level `await` and a 46 MB WASM core, so it lives in a
 1. Slice dry and wet to the trim range (sample-exact).
 2. `mix.ts`: `s·wet + (1−s)·dry`, processed in 1 s chunks to limit peak
    memory.
-3. **Loudness**, if not Off: worker `master` (spike S2), target LUFS with a
-   −1.5 dBTP ceiling.
+3. **Loudness**, if not Off: worker `master` runs our own BS.1770-4 meter and
+   a look-ahead true-peak limiter (`audio/loudness.ts`), with a target LUFS,
+   a −1.5 dBTP ceiling and at most +9 dB of gain, like the SDK. Spike S2
+   showed the SDK can master arbitrary audio, but only by running the model
+   again. Our meter reads within 0.05 LU of the SDK and ffmpeg's `ebur128`.
 4. **Resample** to the source rate if Sample rate = Source.
 5. **Encode** with a Mediabunny `Output`, using the format from `formats.ts`.
    The encoder is chosen by `canEncodeAudio(codec, config)`:
@@ -256,6 +271,11 @@ linked from the footer.
 
 ## 11. Spikes to run before building features
 
+Results (GitHub runner, 100 s of noisy speech): S1 passed (same length, lag 0,
+`strength` is exactly linear). S2: works but re-runs inference, so we master
+locally. S4: no speed gain, so we keep one call. S6: no GPU on CI. Speed was
+about 8× real time on 2 CPU cores.
+
 | ID | Question | Pass criterion |
 |---|---|---|
 | S1 | Is the `strength: 1` output sample-aligned with the input, at the same length? Is SDK `strength` a linear blend? | Cross-correlation peak at lag 0; `enhance(x, {strength: s})` ≈ `s·wet + (1−s)·x`. |
@@ -264,4 +284,5 @@ linked from the footer.
 | S4 | Chunked `enhance()` (60 s with 1 s overlap, crossfade) vs one call: audible seams? speed? | No audible seam at chunk joins in an A/B listening test → use chunking for progress and memory. |
 | S5 | Download sizes: ClearWeb.wasm (gzip/brotli on Pages), LiteRT WASM, model file. | Number for the Import screen copy. |
 | S6 | WebGPU accelerator vs default CPU: speed and correctness on desktop and Android. | Enable WebGPU by default only if faster with identical output. |
+| — | How to run them | Open `/spike.html` in a browser, pick a 2–5 min speech file, then press Run. CI also runs them on every push (`spikes` job, `e2e/spike.spec.ts` with `e2e/fixtures/noisy-speech.mp3`) and uploads `spike-results.json`. |
 | S7 | Browser coverage: WebCodecs AudioDecoder/Encoder (AAC, Opus, FLAC) in Safari/iOS and Firefox; fallback decode via `decodeAudioData` for audio-only files. | A matrix filled in; fallbacks wired. |

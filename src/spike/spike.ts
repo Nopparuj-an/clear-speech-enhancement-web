@@ -3,6 +3,7 @@
 // check, which exercises the real worker + importScripts shim path.
 import { canEncodeAudio } from 'mediabunny';
 import { EnhanceClient } from '../worker/client';
+import { integratedLoudness } from '../audio/loudness';
 import { decodeAudio, downmix, probe, resample } from '../media/source';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -206,6 +207,7 @@ async function run() {
   const scaled = x48.map((v) => v * gain);
   results.s2 = {
     measuredInputLUFS: mastered.measuredLUFS,
+    ourInputLUFS: integratedLoudness([x48]),
     truePeakDBFS: mastered.measuredTruePeakDBFS,
     samplePeakDBFS: 20 * Math.log10(peak || 1e-9),
     fittedGainDB: 20 * Math.log10(Math.abs(gain) || 1e-9),

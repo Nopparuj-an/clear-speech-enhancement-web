@@ -57,6 +57,19 @@ test.describe('desktop', () => {
     expect(audio!.duration).toBeGreaterThan(3.8);
   });
 
+  test('audio: every format exports and decodes', async ({ page }) => {
+    await openEditor(page, 'speech.wav');
+    const expected = { 'M4A (AAC)': ['m4a', 'aac'], Opus: ['opus', 'opus'], FLAC: ['flac', 'flac'] } as const;
+    for (const [label, [ext, codec]] of Object.entries(expected)) {
+      await page.getByRole('radio', { name: new RegExp(label.replace(/[()]/g, '\\$&')) }).click();
+      const out = await download(page, () => page.getByRole('button', { name: /^Export / }).click());
+      expect(out.name).toBe(`speech-enhanced.${ext}`);
+      const audio = await readPackets(out.bytes, 'audio');
+      expect(audio?.codec).toBe(codec);
+      expect(audio!.duration).toBeGreaterThan(3.8);
+    }
+  });
+
   test('audio: trim is exact', async ({ page }) => {
     await openEditor(page, 'speech.mp3');
     await expect(page.getByRole('radio', { name: /MP3/ })).toHaveAttribute('aria-checked', 'true');

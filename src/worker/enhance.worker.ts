@@ -1,4 +1,5 @@
 import './importScriptsShim';
+import { master } from '../audio/loudness';
 import { computePeaks } from '../audio/peaks';
 import { transferablesOf, type ErrorCode, type WorkerRequest, type WorkerResponse } from './protocol';
 
@@ -72,23 +73,16 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
         break;
       }
       case 'master': {
-        const instance = await load();
-        // Loudness only, via strength 0 on already-mixed audio. Spike S2 checks
-        // this returns the input scaled and limited (ARCHITECTURE §11).
-        const result = await instance.enhance(req.channels, req.sampleRate, {
-          strength: 0,
-          targetLUFS: req.targetLUFS,
-          peakCeilingDBFS: req.peakCeilingDBFS,
-          channelMode: req.channels.length > 1 ? 'preserve' : 'mono',
-          outputSampleRate: req.sampleRate,
-        });
+        // Our own BS.1770 + true-peak limiter: the SDK can master arbitrary
+        // audio too, but only by running the model again (spike S2).
+        const result = master(req.channels, { targetLUFS: req.targetLUFS, peakCeilingDBFS: req.peakCeilingDBFS });
         post(
           {
             type: 'mastered',
             id: req.id,
             channels: result.channels,
-            measuredLUFS: result.measuredLUFS,
-            truePeakDBFS: result.measuredTruePeakDBFS,
+            measuredLUFS: Number.isFinite(result.inputLUFS) ? result.inputLUFS : null,
+            truePeakDBFS: null,
           },
           transferablesOf(result.channels),
         );
