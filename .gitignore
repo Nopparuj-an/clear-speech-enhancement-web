@@ -147,3 +147,10 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Speech Enhancement
+dist/
+public/litert/
+test-results/
+playwright-report/
+spike-results.json

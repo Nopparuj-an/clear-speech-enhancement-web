@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Export sheet, mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F4FD1}a:hover{color:#163A9E}
+.tab{flex:1;min-height:40px;border:0;background:transparent;border-radius:8px;font:500 14px 'IBM Plex Sans',sans-serif;color:#5B5E66;cursor:pointer}
+.tab.on{background:#FFFFFF;color:#16171A;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.row{width:100%;min-height:56px;padding:8px 14px;border:1px solid #E2E0DA;background:#FFFFFF;border-radius:12px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left;font-family:'IBM Plex Sans',sans-serif;color:#16171A}
+.row.on{border-color:#1F4FD1;background:#EAF0FF}
+.dot{width:18px;height:18px;border-radius:50%;border:2px solid #9EA2AB;box-sizing:border-box;flex:none}
+.row.on .dot{border:6px solid #1F4FD1}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; overflow: hidden; position: relative; font-family: 'IBM Plex Sans', sans-serif; color: #16171A; background: #6E6F73">
+  <a href="MobileEditor.dc.html" aria-label="Close export" style="position: absolute; inset: 0; display: block"></a>
+
+  <section aria-label="Export" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 760px; background: #F3F2EE; border-radius: 20px 20px 0 0; display: flex; flex-direction: column">
+    <div style="display: flex; justify-content: center; padding-top: 8px"><span style="width: 40px; height: 5px; border-radius: 3px; background: #C9C6BE"></span></div>
+    <div style="display: flex; align-items: center; padding: 8px 8px 4px 16px">
+      <h2 style="margin: 0; flex: 1; font-size: 20px; font-weight: 600">Export</h2>
+      <a href="MobileEditor.dc.html" aria-label="Close" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #16171A">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </a>
+    </div>
+
+    <div style="padding: 8px 16px 16px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto">
+      <div style="display: flex; gap: 4px; background: #E8E6E0; border-radius: 10px; padding: 4px" role="group" aria-label="Export type">
+        <sc-for list="{{tabOpts}}" as="o" hint-placeholder-count="2">
+          <button type="button" class="tab {{o.cls}}" onClick="{{o.pick}}">{{o.label}}</button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{isAudio}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 8px" role="radiogroup" aria-label="Audio format">
+          <sc-for list="{{fmtOpts}}" as="o" hint-placeholder-count="5">
+            <button type="button" role="radio" aria-checked="{{o.checked}}" class="row {{o.cls}}" onClick="{{o.pick}}">
+              <span class="dot"></span>
+              <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-weight: 600; font-size: 15px">{{o.label}}<sc-if value="{{o.rec}}" hint-placeholder-val="{{ false }}"><span style="font: 400 11px 'IBM Plex Mono', monospace; color: #163A9E; background: #EAF0FF; border-radius: 6px; padding: 2px 6px; margin-left: 8px">same as source</span></sc-if></span>
+                <span style="font-size: 12px; color: #5B5E66">{{o.note}}</span>
+              </span>
+              <span style="font: 400 12px 'IBM Plex Mono', monospace; color: #5B5E66">{{o.size}}</span>
+            </button>
+          </sc-for>
+          <p style="margin: 4px 0 0; font-size: 13px; color: #5B5E66">Trimmed to 0:31.20 – 11:46.50, exact to the sample.</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{isVideo}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="background: #FFFFFF; border: 1px solid #E2E0DA; border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 14px">
+            <div style="display: flex; justify-content: space-between"><span style="color: #5B5E66">Container</span><span style="font-family: 'IBM Plex Mono', monospace">MP4</span></div>
+            <div style="display: flex; justify-content: space-between"><span style="color: #5B5E66">Video</span><span style="font-family: 'IBM Plex Mono', monospace">copied as-is</span></div>
+            <div style="display: flex; justify-content: space-between"><span style="color: #5B5E66">Audio</span><span style="font-family: 'IBM Plex Mono', monospace">AAC 192 kbps (as source)</span></div>
+            <div style="display: flex; justify-content: space-between"><span style="color: #5B5E66">Size</span><span style="font-family: 'IBM Plex Mono', monospace">≈ 412 MB</span></div>
+          </div>
+          <div style="background: #FFF5E6; border: 1px solid #F0D3A8; border-radius: 12px; padding: 12px 14px; font-size: 13px; line-height: 1.5; color: #5A3A0C">Video can only be cut on keyframes, so your trim widens to <strong style="font-family: 'IBM Plex Mono', monospace">0:30.00 – 11:48.00</strong>.</div>
+        </div>
+      </sc-if>
+
+      <button type="button" style="min-height: 54px; border: 0; border-radius: 12px; background: #1F4FD1; color: #FFFFFF; font: 600 17px 'IBM Plex Sans', sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 4px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"></path></svg>
+        Save {{ext}}
+      </button>
+      <span style="font: 400 12px 'IBM Plex Mono', monospace; color: #5B5E66; text-align: center">{{fileName}}</span>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { tab: 'video', fmt: 'm4a' };
+  }
+  renderVals() {
+    const s = this.state;
+    const fmts = [
+      { id: 'wav', label: 'WAV', note: 'Lossless, largest', size: '≈ 65 MB' },
+      { id: 'flac', label: 'FLAC', note: 'Lossless, smaller', size: '≈ 30 MB' },
+      { id: 'mp3', label: 'MP3', note: 'Plays everywhere · 192 kbps', size: '≈ 16 MB' },
+      { id: 'm4a', label: 'M4A (AAC)', note: 'Good for Apple devices · 192 kbps', size: '≈ 16 MB' },
+      { id: 'opus', label: 'Opus', note: 'Smallest at same quality · 96 kbps', size: '≈ 8 MB' }
+    ];
+    const ext = s.tab === 'video' ? 'MP4' : fmts.find((f) => f.id === s.fmt).label.split(' ')[0];
+    return {
+      tabOpts: [{ id: 'audio', label: 'Audio only' }, { id: 'video', label: 'Video' }].map((o) => ({ ...o, cls: s.tab === o.id ? 'on' : '', pick: () => this.setState({ tab: o.id }) })),
+      isAudio: s.tab === 'audio',
+      isVideo: s.tab === 'video',
+      fmtOpts: fmts.map((o) => ({ ...o, rec: o.id === 'm4a', cls: s.fmt === o.id ? 'on' : '', checked: String(s.fmt === o.id), pick: () => this.setState({ fmt: o.id }) })),
+      ext,
+      fileName: 'interview_take3-enhanced.' + ext.toLowerCase()
+    };
+  }
+}
+</script>
+</body>
+</html>

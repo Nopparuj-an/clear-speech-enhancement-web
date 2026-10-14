@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Import, desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F3F2EE}
+a{color:#1F4FD1}a:hover{color:#163A9E}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; font-family: 'IBM Plex Sans', sans-serif; color: #16171A; background: #F3F2EE; display: flex; flex-direction: column">
+<header style="display: flex; align-items: center; gap: 10px; padding: 14px 24px; border-bottom: 1px solid #E2E0DA; background: #FFFFFF">
+  <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#16171A"></rect><path d="M7 14h2M11 10v8M15 7v14M19 11v6M23 14h-2" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"></path></svg>
+  <span style="font-weight: 600; font-size: 17px">Speech Enhancement</span>
+</header>
+
+<main style="flex: 1; width: 100%; max-width: 880px; margin: 0 auto; box-sizing: border-box; padding: 56px 24px; display: flex; flex-direction: column; gap: 28px">
+  <div style="display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-size: 40px; line-height: 1.1; font-weight: 600; letter-spacing: -0.01em">Make speech sound studio-clean</h1>
+    <p style="margin: 0; font-size: 18px; line-height: 1.5; color: #4A4D55; max-width: 620px">Removes background noise and room echo from voice recordings, then evens out the loudness. Free, and everything runs on your device.</p>
+  </div>
+
+  <label for="file" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 280px; border: 2px dashed #B9B6AD; border-radius: 18px; background: #FFFFFF; padding: 32px; text-align: center; cursor: pointer">
+    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#1F4FD1" stroke-width="1.6" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"></path></svg>
+    <span style="font-size: 20px; font-weight: 600">Drop an audio or video file here</span>
+    <span style="font-size: 15px; color: #5B5E66">or</span>
+    <span style="min-height: 48px; padding: 0 22px; border-radius: 12px; background: #16171A; color: #FFFFFF; font-weight: 600; font-size: 16px; display: inline-flex; align-items: center">Choose a file</span>
+    <span style="font: 400 13px 'IBM Plex Mono', monospace; color: #5B5E66">MP3 · WAV · M4A · FLAC · OGG · MP4 · MOV · WebM · MKV</span>
+    <input id="file" type="file" accept="audio/*,video/*" style="position: absolute; width: 1px; height: 1px; opacity: 0">
+  </label>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-weight: 600">Private</span>
+      <span style="font-size: 14px; line-height: 1.5; color: #4A4D55">Your file is processed in this browser tab and is never uploaded.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-weight: 600">Keeps your video</span>
+      <span style="font-size: 14px; line-height: 1.5; color: #4A4D55">Video is copied untouched. Only the audio track is replaced.</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-weight: 600">Works best on speech</span>
+      <span style="font-size: 14px; line-height: 1.5; color: #4A4D55">Tuned for English voice. Music and overlapping talkers clean up less well.</span>
+    </div>
+  </div>
+
+  <p style="margin: 0; font-size: 13px; color: #5B5E66">The first time you use it, the cleanup model downloads once (about [MODEL SIZE] MB) and is cached for next time.</p>
+</main>
+
+<footer style="border-top: 1px solid #E2E0DA; padding: 16px 24px; display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: #5B5E66; background: #FFFFFF">
+  <span style="flex: 1 1 520px">Enhancement uses the <a href="https://desertant.com/models/clear/">Clear model by Desert Ant Labs</a>, who are not affiliated with this app; the model sends them anonymous usage counts (no audio).</span>
+  <a href="https://github.com/nopparuj-an/clear-speech-enhancement-web">Source on GitHub</a>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
